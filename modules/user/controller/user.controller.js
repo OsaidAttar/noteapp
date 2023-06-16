@@ -4,15 +4,18 @@ import bycrypt from "bcryptjs"
 
 export const getUser=async(req,res)=>{
    
-  let user=  await userModel.findByIdAndDelete(req.id)
+  let user=await userModel.findById(req.id)
     if(!user){
         return res.status(400).json({message:"user is not found"})
     }
     const newuser=await userModel.findById(req.id).select(['-_id','name','email'])
     return res.status(200).json({message:"modules user",newuser})
 }
+
+
+
 export const deleteUser=async(req,res)=>{
-     await userModel.findByIdAndDelete(req.id)
+   let user=  await userModel.findByIdAndDelete(req.id)
      if(!user){
         return res.status(400).json({message:"user is not found"})
     }
@@ -41,10 +44,13 @@ return res.json({message:"update success",newuser})
 export const changePassword=async(req,res)=>{
 let{currentPassword,newPassword}=req.body
 let validator= changePassSchema.validate(req.body)
-let{value,err}=validator
-let isValid= err ==null
+
+// let{value,err}=validator
+// let isValid= (err==null)
+let { error} = validator
+let isValid= (error==null)
 if(!isValid){
-    return res.json({message:"validation error",err})
+    return res.json({message:"validation error",error})
 }
 if(currentPassword==newPassword){
     return res.status(401).json({message:"current password is equal to new password"})
