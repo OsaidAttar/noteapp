@@ -24,10 +24,10 @@ export const deleteUser=async(req,res)=>{
 export const updateUser=async(req,res)=>{
 let {email,name}=req.body
 let validator= updateSchema.validate(req.body)
-let{value,err}=validator
-let isValid= err ==null
+let{value,error}=validator
+let isValid= error ==null
 if(!isValid){
-    return res.json({message:"validation error",err})
+    return res.json({message:"validation error",error})
 }
 let user=await userModel.findById(req.id)
 if(!user){
@@ -44,10 +44,7 @@ return res.json({message:"update success",newuser})
 export const changePassword=async(req,res)=>{
 let{currentPassword,newPassword}=req.body
 let validator= changePassSchema.validate(req.body)
-
-// let{value,err}=validator
-// let isValid= (err==null)
-let { error} = validator
+let { value,error} = validator
 let isValid= (error==null)
 if(!isValid){
     return res.json({message:"validation error",error})
